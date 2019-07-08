@@ -50,6 +50,11 @@
      
      UIPageViewControllerNavigationOrientationHorizontal 水平方向
      UIPageViewControllerNavigationOrientationVertical 竖直方向
+     
+     options:
+     UIPageViewControllerOptionsKey:
+     UIPageViewControllerOptionInterPageSpacingKey,页面之间的间距,只对滚动过渡模式有效UIPageViewControllerTransitionStyleScroll。CGFloat类型
+     UIPageViewControllerOptionSpineLocationKey 脊柱位置，只对卷页过渡效果有效UIPageViewControllerTransitionStylePageCurl
      */
     
     self.pageViewContol = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationVertical options:nil];
@@ -109,7 +114,7 @@
 
 //MARK:-------UIPageViewControllerDelegate, UIPageViewControllerDataSource-------
 
-//下一个页面
+//下一个页面，慢慢滑动时可能会不调用
 - (nullable UIViewController *)pageViewController:(nonnull UIPageViewController *)pageViewController viewControllerAfterViewController:(nonnull UIViewController *)viewController {
     NSUInteger currentIndex = [self.subControllers indexOfObject:self.currentVC];
     if (currentIndex == 3) {
@@ -120,7 +125,7 @@
     NSLog(@"下一个");
     return vc;
 }
-//上一个页面
+//上一个页面，慢慢滑动时可能会不调用
 - (nullable UIViewController *)pageViewController:(nonnull UIPageViewController *)pageViewController viewControllerBeforeViewController:(nonnull UIViewController *)viewController {
     NSUInteger currentIndex = [self.subControllers indexOfObject:self.currentVC];
     if (currentIndex == 0) {
@@ -131,7 +136,7 @@
     NSLog(@"上一个");
     return vc;
 }
-
+//判断是向前还是向后卸载这里，返回vc的代理在某些时候并不一定会调用，会出bug。
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray<UIViewController *> *)pendingViewControllers {
     NSUInteger index = [self.subControllers indexOfObject:pendingViewControllers.firstObject];
     NSUInteger currentIndex = [self.subControllers indexOfObject:self.currentVC];
